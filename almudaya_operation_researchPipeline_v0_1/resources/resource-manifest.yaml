@@ -1,0 +1,59 @@
+resources:
+  - id: reasoning_model
+    type: model
+    purpose: planning, literature synthesis, section drafting, review feedback
+    access: execute
+    version: runtime-selected
+    limits: {provider_agnostic: true}
+  - id: literature_search
+    type: api
+    purpose: discover candidate scholarly publications
+    access: execute
+    version: adapter-resolved
+    limits: {rate_limit_policy: provider_defined}
+  - id: bibliographic_metadata
+    type: api
+    purpose: verify publication identity and metadata
+    access: execute
+    version: adapter-resolved
+    limits: {sequential_verification: true, rate_limit_policy: provider_defined}
+  - id: scholarly_content
+    type: api
+    purpose: retrieve abstracts and legally accessible full text
+    access: read
+    version: adapter-resolved
+  - id: plotting_engine
+    type: tool
+    purpose: generate data-derived plots
+    access: execute
+    version: adapter-resolved
+  - id: diagram_generation
+    type: tool
+    purpose: generate conceptual diagrams from approved plans
+    access: execute
+    version: optional-adapter
+  - id: visual_critic
+    type: model
+    purpose: inspect visual assets against design and factual criteria
+    access: execute
+    version: optional-vlm-adapter
+  - id: manuscript_evaluator
+    type: service
+    purpose: score manuscript quality and produce structured feedback
+    access: execute
+    version: optional-evaluator-adapter
+  - id: latex_compiler
+    type: tool
+    purpose: compile LaTeX source to PDF
+    access: execute
+    version: adapter-resolved
+  - id: artifact_store
+    type: storage
+    purpose: version source, figures, bibliography, reports, and PDF
+    access: read_write
+    version: project-scoped
+  - id: project_knowledge
+    type: service
+    purpose: retrieve approved project context from PKU
+    access: read
+    version: adapter

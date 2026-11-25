@@ -1,0 +1,9 @@
+bindings:
+  - {role: operation_coordinator, skills: [mission-planning, operation-orchestration, artifact-integration]}
+  - {role: research_planner, skills: [research-framing, outline-generation, visualization-planning, search-strategy-design]}
+  - {role: visualization_specialist, skills: [data-visualization, conceptual-diagramming, figure-captioning, visual-quality-control]}
+  - {role: literature_specialist, skills: [scholarly-search, literature-screening, literature-synthesis, citation-management]}
+  - {role: citation_verifier, skills: [bibliographic-verification, doi-resolution, reference-deduplication]}
+  - {role: manuscript_writer, skills: [academic-writing, latex-authoring, evidence-grounded-synthesis, table-generation]}
+  - {role: quality_refiner, skills: [manuscript-review, structured-critique, revision-planning, regression-checking]}
+resolution: {strategy: registry, version_policy: pinned_or_approved_compatible, missing_required_skill: fail_validation}

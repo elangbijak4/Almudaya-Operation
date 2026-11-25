@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "status",
+    "acceptance_summary",
+    "artifacts"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "succeeded",
+        "failed",
+        "terminated_by_guard",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "acceptance_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "criterion",
+          "status"
+        ],
+        "properties": {
+          "criterion": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "met",
+              "not_met",
+              "waived"
+            ]
+          },
+          "evidence_ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "iterations_used": {
+      "type": "integer"
+    },
+    "artifacts": {
+      "type": "object"
+    },
+    "escalations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

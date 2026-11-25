@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "status",
+    "integrated_recommendation",
+    "child_operation_results"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "succeeded",
+        "partial",
+        "failed",
+        "terminated_by_guard",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "integrated_recommendation": {
+      "type": "string"
+    },
+    "child_operation_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "child_id",
+          "status"
+        ],
+        "properties": {
+          "child_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "output_ref": {
+            "type": "string"
+          },
+          "waiver_reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_register_ref": {
+      "type": "string"
+    },
+    "risk_register_ref": {
+      "type": "string"
+    },
+    "decision_log_ref": {
+      "type": "string"
+    },
+    "execution_trace_ref": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

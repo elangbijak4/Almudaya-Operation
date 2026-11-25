@@ -1,0 +1,5 @@
+resources:
+  - {id: code_workspace, type: storage, purpose: authorized source tree and patch artifacts, access: read_write, version: workspace-bound, limits: {path_scope: authorized_workspace}}
+  - {id: test_runner, type: tool, purpose: run approved tests and linters, access: execute, version: adapter-resolved, limits: {allowlist_required: true}}
+  - {id: coding_model, type: model, purpose: developer and reviewer reasoning, access: execute, version: runtime-selected, limits: {provider_agnostic: true}}
+  - {id: project_knowledge, type: service, purpose: retrieve project conventions from PKU, access: read, version: adapter}

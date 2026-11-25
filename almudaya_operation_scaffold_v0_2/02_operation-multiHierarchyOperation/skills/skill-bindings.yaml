@@ -1,0 +1,4 @@
+bindings:
+  - {role: operation_director, skills: [mission-planning, operation-composition, decision-integration]}
+  - {role: quality_controller, skills: [quality-assurance, evidence-validation]}
+child_skill_resolution: {delegated_to: child_operation_definition, parent_may_override: false, require_registered_versions: true}

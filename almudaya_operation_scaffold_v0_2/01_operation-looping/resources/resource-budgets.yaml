@@ -1,0 +1,3 @@
+budget_version: '1.0'
+limits: {wall_clock_minutes: 120, total_cost_units: 100, operation_iterations: 5, task_retries: 2, concurrent_agents: 5, artifact_storage_mb: 250}
+exhaustion: {action: stop_and_escalate, override: authorized_human_only}

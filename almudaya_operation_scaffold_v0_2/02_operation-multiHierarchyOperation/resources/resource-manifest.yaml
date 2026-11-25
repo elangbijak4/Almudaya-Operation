@@ -1,0 +1,6 @@
+resources:
+  - {id: operation_registry, type: service, purpose: resolve approved Operation definitions and versions, access: read, version: adapter}
+  - {id: evidence_store, type: storage, purpose: store source references and reports, access: read_write, version: project-scoped}
+  - {id: research_search, type: tool, purpose: search approved scholarly and technical sources, access: execute, version: adapter-resolved}
+  - {id: analysis_models, type: model, purpose: specialist research and architecture reasoning, access: execute, version: runtime-selected}
+  - {id: project_knowledge, type: service, purpose: retrieve project context from PKU, access: read, version: adapter}

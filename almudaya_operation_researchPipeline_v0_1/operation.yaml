@@ -1,0 +1,413 @@
+# Canonical structured definition is supplied as operation.json (valid JSON is also valid YAML 1.2).
+# This duplicate extension is provided for discoverability; keep operation.json and this file synchronized.
+{
+  "apiVersion": "almudaya.operation/v0.2",
+  "kind": "AgenticOperation",
+  "identity": {
+    "id": "almudaya.operation.research-pipeline",
+    "name": "Research Pipeline",
+    "version": "0.1.0",
+    "description": "Transforms researcher-provided pre-writing materials into an evidence-grounded LaTeX/PDF manuscript package.",
+    "tags": [
+      "research",
+      "academic-writing",
+      "literature-review",
+      "latex",
+      "multi-agent"
+    ]
+  },
+  "mission": {
+    "objective": "Produce a structured, evidence-grounded scientific manuscript package from supplied research materials.",
+    "scope": [
+      "Plan manuscript structure and research narrative",
+      "Generate or integrate figures and plots",
+      "Discover and verify literature",
+      "Draft and refine manuscript",
+      "Compile and validate final LaTeX/PDF package"
+    ],
+    "deliverables": [
+      "paper.tex",
+      "paper.pdf",
+      "references.bib",
+      "research_plan.json",
+      "citation_registry.json",
+      "claim_evidence_map.json",
+      "quality_review.json",
+      "revision_history.json",
+      "artifact_manifest.json"
+    ],
+    "acceptance": [
+      "Required manuscript sections are present and internally coherent",
+      "Citations are verified or explicitly marked unresolved",
+      "Empirical claims and numeric tables trace to supplied evidence",
+      "Figures have provenance and pass configured critique",
+      "Manuscript passes configured quality gates",
+      "LaTeX compiles successfully",
+      "Human approval is recorded before external submission"
+    ],
+    "parameters_schema": "schemas/input.schema.json"
+  },
+  "organization": {
+    "topology": "hybrid",
+    "roles": [
+      {
+        "id": "operation_coordinator",
+        "responsibilities": [
+          "own mission and stage schedule",
+          "approve research plan",
+          "coordinate parallel branches",
+          "integrate artifacts",
+          "escalate unresolved scientific decisions"
+        ],
+        "skills": [
+          "mission-planning",
+          "operation-orchestration"
+        ],
+        "reports_to": null,
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "research_planner",
+        "responsibilities": [
+          "analyze input materials",
+          "create section outline",
+          "create literature search strategy",
+          "create visualization plan",
+          "map claims to evidence"
+        ],
+        "skills": [
+          "research-framing",
+          "outline-generation",
+          "search-strategy-design"
+        ],
+        "reports_to": "operation_coordinator",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "visualization_specialist",
+        "responsibilities": [
+          "generate plots and conceptual diagrams",
+          "write captions",
+          "preserve figure provenance",
+          "respond to visual critique"
+        ],
+        "skills": [
+          "data-visualization",
+          "conceptual-diagramming",
+          "visual-quality-control"
+        ],
+        "reports_to": "operation_coordinator",
+        "cardinality": {
+          "min": 1,
+          "max": 2
+        }
+      },
+      {
+        "id": "literature_specialist",
+        "responsibilities": [
+          "discover candidate literature",
+          "screen and deduplicate records",
+          "synthesize literature themes",
+          "prepare citation registry and BibTeX"
+        ],
+        "skills": [
+          "scholarly-search",
+          "literature-screening",
+          "literature-synthesis"
+        ],
+        "reports_to": "operation_coordinator",
+        "cardinality": {
+          "min": 1,
+          "max": 2
+        }
+      },
+      {
+        "id": "citation_verifier",
+        "responsibilities": [
+          "verify publication identity and metadata",
+          "resolve DOI or stable identifiers",
+          "check citation-to-reference consistency"
+        ],
+        "skills": [
+          "bibliographic-verification",
+          "doi-resolution"
+        ],
+        "reports_to": "literature_specialist",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "manuscript_writer",
+        "responsibilities": [
+          "draft sections",
+          "integrate citations, figures, tables",
+          "maintain claim evidence traceability",
+          "author LaTeX"
+        ],
+        "skills": [
+          "academic-writing",
+          "latex-authoring",
+          "evidence-grounded-synthesis"
+        ],
+        "reports_to": "operation_coordinator",
+        "cardinality": {
+          "min": 1,
+          "max": 2
+        }
+      },
+      {
+        "id": "quality_refiner",
+        "responsibilities": [
+          "evaluate manuscript",
+          "produce structured feedback",
+          "propose revisions",
+          "compare candidate with last accepted version"
+        ],
+        "skills": [
+          "manuscript-review",
+          "structured-critique",
+          "regression-checking"
+        ],
+        "reports_to": "operation_coordinator",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "human_researcher",
+        "responsibilities": [
+          "confirm research framing and disputed claims",
+          "validate scientific interpretation",
+          "approve final manuscript and any external submission"
+        ],
+        "skills": [],
+        "reports_to": null,
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      }
+    ]
+  },
+  "communication": {
+    "protocol": "almudaya.operation-message.v1",
+    "state_channel": "blackboard",
+    "artifact_passing": "reference",
+    "correlation_required": true,
+    "required_message_kinds": [
+      "task",
+      "result",
+      "feedback",
+      "status",
+      "escalation",
+      "cancel"
+    ],
+    "claim_evidence_refs_required": true
+  },
+  "workflow": {
+    "stages": [
+      {
+        "id": "outline_generation",
+        "owner": "research_planner",
+        "depends_on": [],
+        "action": "Generate outline, section plan, visualization plan, literature strategy, and claim-evidence map.",
+        "output": "research_plan.json"
+      },
+      {
+        "id": "plot_generation",
+        "owner": "visualization_specialist",
+        "depends_on": [
+          "outline_generation"
+        ],
+        "action": "Generate or refine data plots and conceptual diagrams with captions and provenance.",
+        "output": "visual_asset_registry.json"
+      },
+      {
+        "id": "literature_review",
+        "owner": "literature_specialist",
+        "depends_on": [
+          "outline_generation"
+        ],
+        "action": "Discover, screen, verify, synthesize literature and prepare BibTeX.",
+        "output": "citation_registry.json and literature_synthesis"
+      },
+      {
+        "id": "section_writing",
+        "owner": "manuscript_writer",
+        "depends_on": [
+          "plot_generation",
+          "literature_review"
+        ],
+        "action": "Draft and integrate complete manuscript using supplied LaTeX template and experimental log.",
+        "output": "paper_draft.tex"
+      },
+      {
+        "id": "content_refinement",
+        "owner": "quality_refiner",
+        "depends_on": [
+          "section_writing"
+        ],
+        "action": "Evaluate draft, propose revision, compare against last accepted version, accept or rollback.",
+        "output": "accepted_paper.tex and quality_review.json"
+      },
+      {
+        "id": "finalization",
+        "owner": "operation_coordinator",
+        "depends_on": [
+          "content_refinement"
+        ],
+        "action": "Compile LaTeX, validate references/figures/tables, assemble output package, request human approval.",
+        "output": "paper.pdf and artifact_manifest.json"
+      }
+    ]
+  },
+  "behavior": {
+    "execution_mode": "composite",
+    "loops": [
+      {
+        "id": "visual_critique_loop",
+        "scope": "agent",
+        "unit": "visualization_specialist.generate_critique_revise",
+        "max_iterations": 4,
+        "feedback_from": [
+          "visual_critic"
+        ],
+        "continuation": "visual_quality_gate_not_met AND visual_revision_budget_remaining",
+        "acceptance": "visual_factual_consistency AND legibility AND caption_alignment",
+        "no_progress_limit": 2,
+        "on_limit": "escalate_to_human_researcher"
+      },
+      {
+        "id": "manuscript_refinement_loop",
+        "scope": "operation",
+        "unit": [
+          "quality_refiner.evaluate",
+          "manuscript_writer.revise",
+          "quality_refiner.re_evaluate"
+        ],
+        "max_iterations": 3,
+        "feedback_from": [
+          "quality_refiner",
+          "human_researcher"
+        ],
+        "continuation": "quality_gate_not_met AND revision_budget_remaining AND progress_detected",
+        "acceptance": "overall_score_improved OR overall_score_tied_with_no_required_subscore_regression",
+        "no_progress_limit": 1,
+        "on_limit": "preserve_last_accepted_version_and_escalate"
+      },
+      {
+        "id": "task_retry",
+        "scope": "task",
+        "unit": "retryable_stage_task",
+        "max_iterations": 2,
+        "continuation": "error_is_retryable AND operation_is_idempotent_or_checkpointed",
+        "on_limit": "escalate"
+      }
+    ],
+    "termination": {
+      "success": "final_quality_gate_passed AND latex_compilation_success AND required_human_approval_recorded",
+      "failure": "unrecoverable_stage_failure OR required_input_missing_without_resolution",
+      "cancellation": "authorized_user_or_operator_cancel",
+      "deadline": "mission_deadline_reached"
+    },
+    "recovery": {
+      "checkpoint_before": [
+        "parallel_branch_start",
+        "section_writing",
+        "content_refinement",
+        "finalization"
+      ],
+      "restore_via": "ACMA",
+      "preserve_last_accepted_artifact": true,
+      "rollback_strategy": "versioned_artifact_restore"
+    },
+    "reassignment": {
+      "enabled": true,
+      "require_capability_match": true,
+      "max_reassignments_per_role": 1,
+      "preserve_role_contract": true
+    },
+    "guards": {
+      "max_wall_clock_minutes": 240,
+      "max_total_cost_units": 250,
+      "max_concurrent_agents": 8,
+      "max_manuscript_refinement_iterations": 3,
+      "max_visual_revision_iterations": 4,
+      "max_task_retries": 2,
+      "no_progress_detection": "compare_quality_scores_and_open_findings",
+      "cancellation_propagation": "immediate",
+      "external_submission": "human_approval_required",
+      "rate_limit_enforcement": "resource_adapter_policy"
+    }
+  },
+  "resources": {
+    "manifest": "resources/resource-manifest.yaml",
+    "budget": "resources/resource-budgets.yaml",
+    "secret_policy": "resource_reference_only"
+  },
+  "governance": {
+    "policy_ref": "policies/execution-policy.yaml",
+    "integrity_policy_ref": "policies/academic-integrity.yaml",
+    "least_privilege": true,
+    "audit_required": true,
+    "human_approval": [
+      "final_scientific_signoff",
+      "external_submission",
+      "publication"
+    ],
+    "prohibited": [
+      "fabricate_citations",
+      "invent_experimental_results",
+      "misrepresent_unverified_claims",
+      "submit_without_human_approval"
+    ]
+  },
+  "integrations": {
+    "blackboard": {
+      "enabled": true,
+      "purpose": "stage_state_feedback_and_artifact_refs"
+    },
+    "acma": {
+      "enabled": true,
+      "purpose": "checkpoint_handoff_and_recovery"
+    },
+    "pku": {
+      "enabled": true,
+      "purpose": "project_context_and_approved_research_knowledge"
+    },
+    "artifact_versioning": {
+      "required": true,
+      "purpose": "accepted_revision_and_rollback"
+    },
+    "event_bus": {
+      "protocol": "almudaya.operation-message.v1"
+    }
+  },
+  "observability": {
+    "emit_events": [
+      "operation_started",
+      "plan_created",
+      "parallel_branch_started",
+      "citation_verified",
+      "figure_revised",
+      "draft_created",
+      "revision_accepted",
+      "revision_rejected",
+      "rollback_performed",
+      "latex_compiled",
+      "human_approval_requested",
+      "operation_terminated"
+    ],
+    "produce_execution_trace": true,
+    "retain_artifact_provenance": true
+  }
+}

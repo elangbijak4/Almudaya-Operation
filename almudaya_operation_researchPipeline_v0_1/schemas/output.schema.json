@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research Pipeline Operation Output",
+  "type": "object",
+  "required": [
+    "status",
+    "artifacts",
+    "verification_summary",
+    "human_approval_required"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "succeeded",
+        "partial",
+        "failed",
+        "terminated_by_guard",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "latex_source",
+        "pdf",
+        "bibliography"
+      ],
+      "properties": {
+        "latex_source": {
+          "type": "string"
+        },
+        "pdf": {
+          "type": "string"
+        },
+        "bibliography": {
+          "type": "string"
+        },
+        "figures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quality_report": {
+          "type": "string"
+        },
+        "claim_evidence_map": {
+          "type": "string"
+        },
+        "revision_history": {
+          "type": "string"
+        },
+        "artifact_manifest": {
+          "type": "string"
+        }
+      }
+    },
+    "verification_summary": {
+      "type": "object",
+      "properties": {
+        "verified_references": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unverified_references": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_claims": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "compilation_success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "human_approval_required": {
+      "type": "boolean"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

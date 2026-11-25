@@ -1,0 +1,244 @@
+{
+  "api_version": "almudaya.operation/v1alpha1",
+  "kind": "OperationDefinition",
+  "metadata": {
+    "id": "almudaya.software-feature-delivery",
+    "name": "Software Feature Delivery Operation",
+    "version": "0.1.0",
+    "status": "draft"
+  },
+  "spec": {
+    "mission": {
+      "objective": "Implement a bounded software feature, validate it, and deliver reviewable changes with tests and documentation.",
+      "success_criteria": [
+        "All acceptance criteria are mapped to implementation and tests.",
+        "Relevant automated tests pass or failures are explicitly documented.",
+        "Security findings are resolved or formally accepted by an authorized human.",
+        "Changes are reviewable and accompanied by a delivery summary."
+      ]
+    },
+    "organization": {
+      "topology": "hybrid_hierarchical",
+      "roles": [
+        {
+          "id": "delivery-lead",
+          "count": 1,
+          "responsibilities": [
+            "clarify acceptance criteria",
+            "plan work",
+            "coordinate agents",
+            "authorize integration"
+          ],
+          "skills": [
+            "requirements-analysis",
+            "technical-planning"
+          ],
+          "authority": [
+            "assign_tasks",
+            "approve_integration",
+            "request_changes"
+          ]
+        },
+        {
+          "id": "architect",
+          "count": 1,
+          "responsibilities": [
+            "inspect codebase",
+            "propose design",
+            "identify interfaces and risks"
+          ],
+          "skills": [
+            "software-architecture",
+            "repository-analysis"
+          ],
+          "authority": [
+            "submit_design"
+          ]
+        },
+        {
+          "id": "implementer",
+          "count": 1,
+          "responsibilities": [
+            "implement assigned changes",
+            "follow repository conventions",
+            "document code decisions"
+          ],
+          "skills": [
+            "code-implementation",
+            "refactoring"
+          ],
+          "authority": [
+            "modify_assigned_files"
+          ]
+        },
+        {
+          "id": "test-engineer",
+          "count": 1,
+          "responsibilities": [
+            "design and run tests",
+            "report regressions",
+            "verify acceptance criteria"
+          ],
+          "skills": [
+            "test-design",
+            "test-automation"
+          ],
+          "authority": [
+            "run_tests",
+            "block_release_on_failure"
+          ]
+        },
+        {
+          "id": "security-reviewer",
+          "count": 1,
+          "responsibilities": [
+            "review security-sensitive changes",
+            "inspect dependencies and permissions",
+            "identify unsafe patterns"
+          ],
+          "skills": [
+            "secure-code-review",
+            "threat-modeling"
+          ],
+          "authority": [
+            "raise_security_blocker"
+          ]
+        },
+        {
+          "id": "integrator",
+          "count": 1,
+          "responsibilities": [
+            "review diffs",
+            "resolve integration issues",
+            "prepare delivery summary"
+          ],
+          "skills": [
+            "code-review",
+            "release-documentation"
+          ],
+          "authority": [
+            "prepare_integration_candidate"
+          ]
+        }
+      ]
+    },
+    "workflow": {
+      "stages": [
+        {
+          "id": "requirements",
+          "task": "Convert request into scope, acceptance criteria, and non-goals",
+          "owner": "delivery-lead",
+          "depends_on": []
+        },
+        {
+          "id": "design",
+          "task": "Inspect repository and produce implementation plan",
+          "owner": "architect",
+          "depends_on": [
+            "requirements"
+          ]
+        },
+        {
+          "id": "implementation",
+          "task": "Implement changes in bounded work units",
+          "owner": "implementer",
+          "depends_on": [
+            "design"
+          ]
+        },
+        {
+          "id": "testing",
+          "task": "Run relevant tests and validate acceptance criteria",
+          "owner": "test-engineer",
+          "depends_on": [
+            "implementation"
+          ]
+        },
+        {
+          "id": "security",
+          "task": "Review security-sensitive surfaces and dependencies",
+          "owner": "security-reviewer",
+          "depends_on": [
+            "implementation"
+          ]
+        },
+        {
+          "id": "integration",
+          "task": "Review diff, reconcile findings, and prepare delivery report",
+          "owner": "integrator",
+          "depends_on": [
+            "testing",
+            "security"
+          ]
+        }
+      ]
+    },
+    "communication": {
+      "protocol_id": "almudaya.operation-message.v1",
+      "patterns": [
+        "task_assignment",
+        "design_review",
+        "patch_handoff",
+        "test_report",
+        "review_finding",
+        "integration_decision"
+      ],
+      "required_fields": [
+        "message_id",
+        "operation_instance_id",
+        "sender",
+        "recipient",
+        "message_type",
+        "correlation_id",
+        "timestamp",
+        "payload"
+      ],
+      "handoff_requires_ack": true,
+      "retry_limit": 2
+    },
+    "resources": {
+      "shared": [
+        "repository-read-access",
+        "operation-blackboard",
+        "project-memory"
+      ],
+      "role_bindings": {
+        "architect": [
+          "repository-inspection"
+        ],
+        "implementer": [
+          "isolated-worktree",
+          "approved-code-runtime"
+        ],
+        "test-engineer": [
+          "test-runtime"
+        ],
+        "security-reviewer": [
+          "dependency-audit-tool"
+        ],
+        "integrator": [
+          "diff-review-interface"
+        ]
+      }
+    },
+    "governance": {
+      "constraints": [
+        "Do not deploy to production or publish releases without explicit human approval.",
+        "Do not access secrets or modify environment credentials.",
+        "Use an isolated branch or worktree where supported.",
+        "Do not overwrite unrelated user changes.",
+        "If repository instructions conflict with this Operation, stop and escalate."
+      ],
+      "human_approval_required_for": [
+        "external_publication",
+        "production_deployment",
+        "irreversible_external_actions",
+        "restricted_data_sharing"
+      ]
+    },
+    "contracts": {
+      "input_schema": "schemas/input.schema.json",
+      "output_schema": "schemas/output.schema.json"
+    }
+  }
+}

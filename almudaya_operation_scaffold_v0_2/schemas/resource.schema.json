@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Operation Resource Manifest",
+  "type": "object",
+  "required": [
+    "resources"
+  ],
+  "properties": {
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "purpose",
+          "access"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "model",
+              "tool",
+              "api",
+              "dataset",
+              "storage",
+              "compute",
+              "service"
+            ]
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "access": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "secret_ref": {
+            "type": "string"
+          },
+          "limits": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "apiVersion": "almudaya.operation/v0.2",
+  "kind": "AgenticOperation",
+  "identity": {
+    "id": "almudaya.operation.multi-hierarchy",
+    "name": "Multi-Hierarchical Research and Delivery",
+    "version": "0.2.0",
+    "description": "Parent Operation coordinating nested specialist Operations.",
+    "tags": [
+      "multi-operation",
+      "hierarchy",
+      "composition"
+    ]
+  },
+  "mission": {
+    "objective": "Produce an integrated, evidence-grounded technical recommendation package.",
+    "scope": [
+      "Establish common project brief and criteria",
+      "Delegate specialist work to child Operations",
+      "Integrate findings and run final quality gate"
+    ],
+    "deliverables": [
+      "integrated_recommendation",
+      "evidence_register",
+      "architecture_options",
+      "risk_register",
+      "decision_log",
+      "execution_trace"
+    ],
+    "acceptance": [
+      "All mandatory child Operations succeeded or explicitly waived",
+      "Evidence claims traceable",
+      "Architecture options and material risks documented",
+      "Cross-branch contradictions resolved or reported",
+      "Final quality gate approved"
+    ],
+    "parameters_schema": "schemas/input.schema.json"
+  },
+  "organization": {
+    "topology": "hierarchical",
+    "roles": [
+      {
+        "id": "operation_director",
+        "responsibilities": [
+          "own global mission",
+          "delegate child Operations",
+          "manage dependencies and budgets",
+          "resolve conflicts",
+          "approve final package"
+        ],
+        "skills": [
+          "mission-planning",
+          "operation-composition"
+        ],
+        "reports_to": null,
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "quality_controller",
+        "responsibilities": [
+          "validate child contracts",
+          "verify traceability",
+          "run final quality gate"
+        ],
+        "skills": [
+          "quality-assurance",
+          "evidence-validation"
+        ],
+        "reports_to": "operation_director",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      }
+    ],
+    "sub_operations": [
+      {
+        "id": "research_branch",
+        "operation_ref": "almudaya.operation.research-branch",
+        "version": "1.x-compatible",
+        "input_mapping": {
+          "project_brief": "$.mission.project_brief",
+          "evidence_requirements": "$.mission.evidence_requirements"
+        },
+        "output_mapping": {
+          "evidence_register": "$.outputs.evidence_register",
+          "synthesis": "$.outputs.research_synthesis"
+        },
+        "depends_on": [],
+        "execution": {
+          "mode": "parallel",
+          "required": true,
+          "budget_share_percent": 30
+        }
+      },
+      {
+        "id": "technical_branch",
+        "operation_ref": "almudaya.operation.technical-assessment",
+        "version": "1.x-compatible",
+        "input_mapping": {
+          "project_brief": "$.mission.project_brief",
+          "constraints": "$.mission.constraints"
+        },
+        "output_mapping": {
+          "architecture_options": "$.outputs.architecture_options",
+          "risk_register": "$.outputs.risk_register"
+        },
+        "depends_on": [],
+        "execution": {
+          "mode": "parallel",
+          "required": true,
+          "budget_share_percent": 35
+        }
+      },
+      {
+        "id": "integration_branch",
+        "operation_ref": "almudaya.operation.integration-quality-gate",
+        "version": "1.x-compatible",
+        "input_mapping": {
+          "research_outputs": "$.child_outputs.research_branch",
+          "technical_outputs": "$.child_outputs.technical_branch"
+        },
+        "output_mapping": {
+          "integrated_recommendation": "$.outputs.integrated_recommendation",
+          "quality_decision": "$.outputs.quality_decision"
+        },
+        "depends_on": [
+          "research_branch",
+          "technical_branch"
+        ],
+        "execution": {
+          "mode": "sequential",
+          "required": true,
+          "budget_share_percent": 25
+        }
+      }
+    ]
+  },
+  "communication": {
+    "protocol": "almudaya.operation-message.v1",
+    "parent_child_contract": "input_output_schema_enforced",
+    "state_channel": "blackboard",
+    "artifact_passing": "reference",
+    "correlation_required": true,
+    "cancellation_propagation": "policy_controlled"
+  },
+  "workflow": {
+    "stages": [
+      {
+        "id": "initialize",
+        "owner": "operation_director",
+        "action": "Validate brief, criteria, aggregate budget.",
+        "output": "mission_charter"
+      },
+      {
+        "id": "run_research",
+        "owner": "research_branch",
+        "depends_on": [
+          "initialize"
+        ],
+        "action": "Instantiate research child Operation.",
+        "output": "research_outputs"
+      },
+      {
+        "id": "run_technical",
+        "owner": "technical_branch",
+        "depends_on": [
+          "initialize"
+        ],
+        "action": "Instantiate technical assessment child Operation.",
+        "output": "technical_outputs"
+      },
+      {
+        "id": "integrate",
+        "owner": "integration_branch",
+        "depends_on": [
+          "run_research",
+          "run_technical"
+        ],
+        "action": "Integrate findings and run quality gate.",
+        "output": "integrated_package"
+      },
+      {
+        "id": "finalize",
+        "owner": "quality_controller",
+        "depends_on": [
+          "integrate"
+        ],
+        "action": "Validate package and record decision.",
+        "output": "final_decision"
+      }
+    ]
+  },
+  "behavior": {
+    "execution_mode": "hierarchical",
+    "loops": [
+      {
+        "id": "child_revision_cycle",
+        "scope": "nested_operation",
+        "unit": "selected_child_operation",
+        "max_iterations": 2,
+        "feedback_from": [
+          "quality_controller",
+          "operation_director"
+        ],
+        "continuation": "child_output_fails_quality_gate AND revision_actionable AND aggregate_budget_remaining",
+        "acceptance": "child_output_passes_contract_and_quality_gate",
+        "no_progress_limit": 1,
+        "on_limit": "escalate_to_operation_director"
+      }
+    ],
+    "termination": {
+      "success": "all_required_children_succeeded_or_waived AND final_quality_gate_approved",
+      "failure": "required_child_unrecoverable_failure OR aggregate_budget_exhausted",
+      "cancellation": "authorized_parent_cancel",
+      "deadline": "parent_deadline_reached"
+    },
+    "recovery": {
+      "checkpoint_before": [
+        "child_instantiation",
+        "integration",
+        "finalization"
+      ],
+      "restore_via": "ACMA",
+      "retry_backoff": "bounded_exponential",
+      "child_retry": "only_if_child_contract_marks_error_retryable"
+    },
+    "reassignment": {
+      "enabled": true,
+      "require_capability_match": true,
+      "max_reassignments_per_child": 1
+    },
+    "guards": {
+      "max_wall_clock_minutes": 360,
+      "max_total_iterations": 2,
+      "max_nesting_depth": 3,
+      "max_concurrent_child_operations": 2,
+      "max_total_cost_units": 300,
+      "detect_operation_reference_cycles": true,
+      "propagate_budget_to_children": true,
+      "prevent_cross_child_budget_borrowing": true,
+      "external_side_effects": "approval_required"
+    }
+  },
+  "resources": {
+    "manifest": "resources/resource-manifest.yaml",
+    "budget": "resources/resource-budgets.yaml",
+    "child_budget_policy": "partitioned",
+    "shared_resource_policy": "lease_and_quota",
+    "secret_policy": "reference_only"
+  },
+  "governance": {
+    "policy_ref": "policies/execution-policy.yaml",
+    "least_privilege": true,
+    "audit_required": true,
+    "child_permission_isolation": true,
+    "human_approval": [
+      "publish_external_recommendation",
+      "modify_external_system"
+    ],
+    "prohibited": [
+      "instantiate_unregistered_child_operation",
+      "bypass_child_output_schema",
+      "exceed_nesting_depth"
+    ]
+  },
+  "integrations": {
+    "blackboard": {
+      "enabled": true,
+      "purpose": "parent_child_scoped_state_and_artifacts"
+    },
+    "acma": {
+      "enabled": true,
+      "purpose": "parent_child_checkpoint_and_recovery"
+    },
+    "pku": {
+      "enabled": true,
+      "purpose": "project_context_and_approved_knowledge"
+    },
+    "operation_registry": {
+      "required": true,
+      "version_resolution": "pinned_or_compatible_with_lock_record"
+    },
+    "event_bus": {
+      "protocol": "almudaya.operation-message.v1"
+    }
+  },
+  "observability": {
+    "emit_events": [
+      "parent_started",
+      "child_instantiated",
+      "child_status_changed",
+      "budget_allocated",
+      "integration_started",
+      "quality_gate_decided",
+      "parent_terminated"
+    ],
+    "retain_child_execution_refs": true,
+    "produce_execution_trace": true
+  }
+}

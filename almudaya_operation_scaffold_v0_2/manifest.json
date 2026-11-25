@@ -1,0 +1,18 @@
+{
+  "name": "almudaya-operation-scaffold",
+  "version": "0.2.0",
+  "apiVersion": "almudaya.operation/v0.2",
+  "operations": [
+    {
+      "id": "almudaya.operation.looping",
+      "path": "01_operation-looping/operation.yaml",
+      "documentation": "01_operation-looping/Operation.md"
+    },
+    {
+      "id": "almudaya.operation.multi-hierarchy",
+      "path": "02_operation-multiHierarchyOperation/operation.yaml",
+      "documentation": "02_operation-multiHierarchyOperation/Operation.md"
+    }
+  ],
+  "status": "declarative-scaffold-not-runtime"
+}

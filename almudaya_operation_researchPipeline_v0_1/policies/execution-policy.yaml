@@ -1,0 +1,18 @@
+policy_id: research-pipeline-execution
+version: '1.0'
+permissions:
+  project_materials_read: authorized_scope
+  project_artifacts_write: operation_workspace_only
+  scholarly_search: approved_providers_only
+  full_text_access: license_and_access_rights_respected
+  external_submission: deny_without_human_approval
+  secret_access: resource_reference_only
+workflow:
+  parallel_stages: [plot_generation, literature_review]
+  sequential_stage_dependencies: enforced
+  artifact_versioning: required
+safety:
+  loops_must_be_bounded: true
+  budget_exhaustion: stop_and_escalate
+  cancellation_propagation: required
+  preserve_last_accepted_manuscript: true

@@ -1,0 +1,22 @@
+{
+  "scaffold": "Almudaya Agentic Operations PoC",
+  "version": "0.1.0",
+  "operations": [
+    {
+      "id": "almudaya.scientific-literature-review",
+      "path": "01_scientific_literature_review",
+      "name": "Scientific Literature Review Operation"
+    },
+    {
+      "id": "almudaya.software-feature-delivery",
+      "path": "02_software_feature_delivery",
+      "name": "Software Feature Delivery Operation"
+    },
+    {
+      "id": "almudaya.reproducible-dataset-analysis",
+      "path": "03_dataset_analysis",
+      "name": "Reproducible Dataset Analysis Operation"
+    }
+  ],
+  "format_note": "operation.yaml files use JSON syntax, valid YAML 1.2"
+}

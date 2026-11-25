@@ -1,0 +1,239 @@
+{
+  "api_version": "almudaya.operation/v1alpha1",
+  "kind": "OperationDefinition",
+  "metadata": {
+    "id": "almudaya.reproducible-dataset-analysis",
+    "name": "Reproducible Dataset Analysis Operation",
+    "version": "0.1.0",
+    "status": "draft"
+  },
+  "spec": {
+    "mission": {
+      "objective": "Inspect a supplied dataset, conduct a reproducible analysis, validate results, and produce an evidence-based analytical report.",
+      "success_criteria": [
+        "Dataset schema and quality issues are documented.",
+        "Methods are justified against the analytical question and data characteristics.",
+        "Transformations, code, parameters, and random seeds are recorded where applicable.",
+        "Key results are independently checked.",
+        "The report distinguishes observations, interpretations, and limitations."
+      ]
+    },
+    "organization": {
+      "topology": "pipeline_with_validation_loop",
+      "roles": [
+        {
+          "id": "analysis-coordinator",
+          "count": 1,
+          "responsibilities": [
+            "confirm analytical questions",
+            "plan analysis stages",
+            "track data lineage and deliverables"
+          ],
+          "skills": [
+            "analysis-planning",
+            "data-governance"
+          ],
+          "authority": [
+            "assign_tasks",
+            "approve_stage_transition"
+          ]
+        },
+        {
+          "id": "data-profiler",
+          "count": 1,
+          "responsibilities": [
+            "inspect schema",
+            "profile missingness and distributions",
+            "identify data quality issues"
+          ],
+          "skills": [
+            "data-profiling",
+            "data-quality-assessment"
+          ],
+          "authority": [
+            "submit_profile"
+          ]
+        },
+        {
+          "id": "methodologist",
+          "count": 1,
+          "responsibilities": [
+            "select suitable statistical or machine-learning methods",
+            "document assumptions",
+            "define validation strategy"
+          ],
+          "skills": [
+            "statistical-method-selection",
+            "experimental-design"
+          ],
+          "authority": [
+            "recommend_methods"
+          ]
+        },
+        {
+          "id": "analysis-executor",
+          "count": 1,
+          "responsibilities": [
+            "execute approved transformations and analyses",
+            "preserve reproducible code",
+            "generate outputs"
+          ],
+          "skills": [
+            "python-data-analysis",
+            "statistical-computing"
+          ],
+          "authority": [
+            "execute_approved_analysis"
+          ]
+        },
+        {
+          "id": "quality-validator",
+          "count": 1,
+          "responsibilities": [
+            "check calculations",
+            "review assumptions",
+            "reproduce key outputs"
+          ],
+          "skills": [
+            "result-validation",
+            "reproducibility-audit"
+          ],
+          "authority": [
+            "approve_or_flag_results"
+          ]
+        },
+        {
+          "id": "report-author",
+          "count": 1,
+          "responsibilities": [
+            "explain methods and results",
+            "create tables and figures",
+            "state limitations"
+          ],
+          "skills": [
+            "data-visualization",
+            "analytical-report-writing"
+          ],
+          "authority": [
+            "produce_report"
+          ]
+        }
+      ]
+    },
+    "workflow": {
+      "stages": [
+        {
+          "id": "question",
+          "task": "Confirm research questions, variables, and expected outputs",
+          "owner": "analysis-coordinator",
+          "depends_on": []
+        },
+        {
+          "id": "profiling",
+          "task": "Inspect dataset structure, quality, and descriptive properties",
+          "owner": "data-profiler",
+          "depends_on": [
+            "question"
+          ]
+        },
+        {
+          "id": "method-selection",
+          "task": "Recommend methods and document assumptions and validation plan",
+          "owner": "methodologist",
+          "depends_on": [
+            "profiling"
+          ]
+        },
+        {
+          "id": "execution",
+          "task": "Execute analysis with recorded code, parameters, and transformations",
+          "owner": "analysis-executor",
+          "depends_on": [
+            "method-selection"
+          ]
+        },
+        {
+          "id": "validation",
+          "task": "Independently validate key results and reproducibility",
+          "owner": "quality-validator",
+          "depends_on": [
+            "execution"
+          ]
+        },
+        {
+          "id": "reporting",
+          "task": "Prepare report with methods, results, visualizations, and limitations",
+          "owner": "report-author",
+          "depends_on": [
+            "validation"
+          ]
+        }
+      ]
+    },
+    "communication": {
+      "protocol_id": "almudaya.operation-message.v1",
+      "patterns": [
+        "stage_handoff",
+        "analysis_request",
+        "result_submission",
+        "validation_feedback",
+        "rework_request",
+        "status_broadcast"
+      ],
+      "required_fields": [
+        "message_id",
+        "operation_instance_id",
+        "sender",
+        "recipient",
+        "message_type",
+        "correlation_id",
+        "timestamp",
+        "payload"
+      ],
+      "handoff_requires_ack": true,
+      "retry_limit": 2
+    },
+    "resources": {
+      "shared": [
+        "read_only_dataset",
+        "operation-blackboard",
+        "project-memory",
+        "artifact-store"
+      ],
+      "role_bindings": {
+        "data-profiler": [
+          "python-dataframe-runtime"
+        ],
+        "analysis-executor": [
+          "isolated-python-runtime"
+        ],
+        "quality-validator": [
+          "independent-validation-runtime"
+        ],
+        "report-author": [
+          "chart-and-document-generator"
+        ]
+      }
+    },
+    "governance": {
+      "constraints": [
+        "Treat the source dataset as read-only.",
+        "Never fabricate observations, measurements, or statistical results.",
+        "Do not infer causality from association alone.",
+        "Record missing-data handling and all exclusions.",
+        "Protect personal or sensitive data and minimize unnecessary exposure.",
+        "Human approval is required before publishing or sharing restricted data."
+      ],
+      "human_approval_required_for": [
+        "external_publication",
+        "production_deployment",
+        "irreversible_external_actions",
+        "restricted_data_sharing"
+      ]
+    },
+    "contracts": {
+      "input_schema": "schemas/input.schema.json",
+      "output_schema": "schemas/output.schema.json"
+    }
+  }
+}

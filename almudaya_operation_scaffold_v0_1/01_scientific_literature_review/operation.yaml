@@ -1,0 +1,238 @@
+{
+  "api_version": "almudaya.operation/v1alpha1",
+  "kind": "OperationDefinition",
+  "metadata": {
+    "id": "almudaya.scientific-literature-review",
+    "name": "Scientific Literature Review Operation",
+    "version": "0.1.0",
+    "status": "draft"
+  },
+  "spec": {
+    "mission": {
+      "objective": "Produce a traceable and evidence-grounded literature review for a defined research question.",
+      "success_criteria": [
+        "Search strategy and screening criteria are documented.",
+        "Every included source has traceable bibliographic metadata.",
+        "Claims in the synthesis are linked to supporting sources.",
+        "Limitations and evidence gaps are explicitly reported."
+      ]
+    },
+    "organization": {
+      "topology": "hierarchical",
+      "roles": [
+        {
+          "id": "coordinator",
+          "count": 1,
+          "responsibilities": [
+            "decompose research question",
+            "assign search and screening tasks",
+            "monitor progress",
+            "resolve task dependencies"
+          ],
+          "skills": [
+            "research-planning",
+            "task-decomposition"
+          ],
+          "authority": [
+            "assign_tasks",
+            "request_status",
+            "approve_stage_transition"
+          ]
+        },
+        {
+          "id": "searcher",
+          "count": 2,
+          "responsibilities": [
+            "search scholarly sources",
+            "record bibliographic metadata",
+            "identify DOI and source URL"
+          ],
+          "skills": [
+            "scholarly-search",
+            "bibliographic-extraction"
+          ],
+          "authority": [
+            "submit_search_results"
+          ]
+        },
+        {
+          "id": "screening-analyst",
+          "count": 1,
+          "responsibilities": [
+            "apply inclusion and exclusion criteria",
+            "classify relevance",
+            "record screening rationale"
+          ],
+          "skills": [
+            "literature-screening",
+            "relevance-assessment"
+          ],
+          "authority": [
+            "submit_screening_decisions"
+          ]
+        },
+        {
+          "id": "evidence-synthesizer",
+          "count": 1,
+          "responsibilities": [
+            "extract findings",
+            "compare methods and results",
+            "identify themes and research gaps"
+          ],
+          "skills": [
+            "evidence-extraction",
+            "thematic-synthesis"
+          ],
+          "authority": [
+            "submit_synthesis"
+          ]
+        },
+        {
+          "id": "citation-validator",
+          "count": 1,
+          "responsibilities": [
+            "verify bibliographic fields",
+            "check DOI resolution where available",
+            "flag unsupported claims"
+          ],
+          "skills": [
+            "citation-validation",
+            "evidence-audit"
+          ],
+          "authority": [
+            "approve_or_reject_evidence"
+          ]
+        },
+        {
+          "id": "report-writer",
+          "count": 1,
+          "responsibilities": [
+            "prepare structured review",
+            "preserve citation traceability",
+            "produce limitations section"
+          ],
+          "skills": [
+            "academic-writing",
+            "reference-formatting"
+          ],
+          "authority": [
+            "produce_draft_report"
+          ]
+        }
+      ]
+    },
+    "workflow": {
+      "stages": [
+        {
+          "id": "scope",
+          "task": "Confirm research question, date range, databases, and inclusion criteria",
+          "owner": "coordinator",
+          "depends_on": []
+        },
+        {
+          "id": "discovery",
+          "task": "Search sources and collect metadata",
+          "owner": "searcher",
+          "depends_on": [
+            "scope"
+          ],
+          "parallel": true
+        },
+        {
+          "id": "screening",
+          "task": "Screen records and document exclusion reasons",
+          "owner": "screening-analyst",
+          "depends_on": [
+            "discovery"
+          ]
+        },
+        {
+          "id": "validation",
+          "task": "Validate citations and evidence traceability",
+          "owner": "citation-validator",
+          "depends_on": [
+            "screening"
+          ]
+        },
+        {
+          "id": "synthesis",
+          "task": "Extract and synthesize evidence; identify gaps",
+          "owner": "evidence-synthesizer",
+          "depends_on": [
+            "validation"
+          ]
+        },
+        {
+          "id": "report",
+          "task": "Write review with methods, findings, limitations, and references",
+          "owner": "report-writer",
+          "depends_on": [
+            "synthesis"
+          ]
+        }
+      ]
+    },
+    "communication": {
+      "protocol_id": "almudaya.operation-message.v1",
+      "patterns": [
+        "task_assignment",
+        "request_response",
+        "result_submission",
+        "broadcast_status",
+        "validation_feedback"
+      ],
+      "required_fields": [
+        "message_id",
+        "operation_instance_id",
+        "sender",
+        "recipient",
+        "message_type",
+        "correlation_id",
+        "timestamp",
+        "payload"
+      ],
+      "handoff_requires_ack": true,
+      "retry_limit": 2
+    },
+    "resources": {
+      "shared": [
+        "operation-blackboard",
+        "project-memory",
+        "reference-ledger"
+      ],
+      "role_bindings": {
+        "searcher": [
+          "scholarly-search-interface"
+        ],
+        "citation-validator": [
+          "doi-resolution-interface"
+        ],
+        "evidence-synthesizer": [
+          "document-reader"
+        ],
+        "report-writer": [
+          "document-generator"
+        ]
+      }
+    },
+    "governance": {
+      "constraints": [
+        "Do not fabricate references, DOI values, quotations, or findings.",
+        "Do not treat an unresolved DOI as proof that a source is invalid; flag it for review.",
+        "Separate source-reported findings from agent interpretation.",
+        "Record search dates, databases, queries, and screening decisions.",
+        "Human review is required before external submission."
+      ],
+      "human_approval_required_for": [
+        "external_publication",
+        "production_deployment",
+        "irreversible_external_actions",
+        "restricted_data_sharing"
+      ]
+    },
+    "contracts": {
+      "input_schema": "schemas/input.schema.json",
+      "output_schema": "schemas/output.schema.json"
+    }
+  }
+}

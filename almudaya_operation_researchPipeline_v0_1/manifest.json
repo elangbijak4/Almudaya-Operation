@@ -1,0 +1,16 @@
+{
+  "apiVersion": "almudaya.operation/v0.2",
+  "operation": {
+    "id": "almudaya.operation.research-pipeline",
+    "version": "0.1.0",
+    "definition": "operation.json",
+    "yaml_view": "operation.yaml",
+    "documentation": "Operation.md"
+  },
+  "source_inspiration": {
+    "title": "PaperOrchestra: A Multi-Agent Framework for Automated AI Research Paper Writing",
+    "arxiv": "2604.05018v1",
+    "doi": "10.48550/arXiv.2604.05018"
+  },
+  "status": "declarative-reference-scaffold-not-runtime"
+}

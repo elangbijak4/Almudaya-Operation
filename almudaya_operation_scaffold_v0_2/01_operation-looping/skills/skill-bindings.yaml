@@ -1,0 +1,6 @@
+bindings:
+  - {role: delivery_lead, skills: [requirements-analysis, task-decomposition]}
+  - {role: developer, skills: [code-navigation, implementation, debugging]}
+  - {role: test_engineer, skills: [test-design, test-execution]}
+  - {role: reviewer, skills: [code-review, secure-coding-review]}
+resolution: {strategy: registry, version_policy: pinned_or_approved_compatible, missing_skill: fail_validation}

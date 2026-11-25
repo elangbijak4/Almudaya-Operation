@@ -1,0 +1,19 @@
+budget_version: '1.0'
+defaults:
+  max_wall_clock_minutes: 240
+  max_cost_units: 250
+  max_concurrent_agents: 8
+  max_manuscript_refinement_iterations: 3
+  max_visual_revision_iterations_per_batch: 4
+  max_task_retries: 2
+allocation:
+  planning: 10
+  literature_discovery_and_verification: 30
+  visualization: 20
+  manuscript_writing: 20
+  refinement_and_evaluation: 15
+  compilation_and_finalization: 5
+allocation_unit: percent_of_total_cost_units
+exhaustion:
+  action: stop_new_work_and_escalate
+  override: authorized_human_only

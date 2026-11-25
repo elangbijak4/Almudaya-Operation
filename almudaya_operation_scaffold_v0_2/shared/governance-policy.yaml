@@ -1,0 +1,13 @@
+policy_version: '1.0'
+defaults:
+  least_privilege: true
+  schema_validation: required
+  audit_events: required
+  external_side_effects: approval_required
+  secrets: secret_reference_only
+  explicit_resource_budgets: required
+  deny_on_budget_exceeded: true
+  loops_must_be_bounded: true
+  nested_operation_cycle_detection: required
+  cancellation_propagation: required
+  checkpoint_before_irreversible_action: true

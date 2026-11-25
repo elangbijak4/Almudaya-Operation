@@ -1,0 +1,16 @@
+policy_id: research-pipeline-integrity
+version: '1.0'
+evidence:
+  empirical_claims_require_traceable_input_or_source: true
+  fabricated_citations: prohibited
+  unresolved_references_must_be_labeled: true
+  generated_plots_require_data_provenance: true
+  generated_diagrams_require_claim_consistency_check: true
+  numerical_tables_require_experimental_log_traceability: true
+authorship:
+  human_researcher_retains_final_accountability: true
+  autonomous_submission: prohibited
+  external_publication_requires_human_approval: true
+evaluation:
+  llm_judges_are_advisory: true
+  expert_validation_required_for_scientific_claims: true

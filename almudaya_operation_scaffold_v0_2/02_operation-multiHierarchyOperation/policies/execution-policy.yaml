@@ -1,0 +1,5 @@
+policy_id: multi-hierarchy-operation-policy
+version: '1.0'
+permissions: {operation_registry_read: allowed, child_instantiate: registered_and_authorized_only, child_resources: isolated, cross_child_artifacts: explicit_mapping_only, cross_child_secrets: deny}
+approvals: {external_publication: human_required, external_system_modification: human_required}
+hierarchy_safety: {max_nesting_depth: 3, detect_cycles: true, cancellation_propagation: true, aggregate_budget: enforced, child_budget_isolation: enforced, unresolved_operation_refs: reject}

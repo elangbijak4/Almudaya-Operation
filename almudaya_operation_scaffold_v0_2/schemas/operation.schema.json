@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Almudaya Agentic Operation v0.2",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "identity",
+    "mission",
+    "organization",
+    "workflow",
+    "behavior",
+    "resources",
+    "governance",
+    "integrations"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "almudaya.operation/v0.2"
+    },
+    "kind": {
+      "const": "AgenticOperation"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "required": [
+        "objective",
+        "acceptance"
+      ],
+      "properties": {
+        "objective": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parameters_schema": {
+          "type": "string"
+        }
+      }
+    },
+    "organization": {
+      "type": "object",
+      "required": [
+        "topology",
+        "roles"
+      ],
+      "properties": {
+        "topology": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "sub_operations": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "communication": {
+      "type": "object"
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "stages"
+      ],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "required": [
+        "execution_mode",
+        "loops",
+        "termination"
+      ],
+      "properties": {
+        "execution_mode": {
+          "type": "string"
+        },
+        "loops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "scope",
+              "max_iterations",
+              "continuation"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "scope": {
+                "enum": [
+                  "task",
+                  "agent",
+                  "operation",
+                  "nested_operation"
+                ]
+              },
+              "max_iterations": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "continuation": {
+                "type": "string"
+              },
+              "acceptance": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "termination": {
+          "type": "object"
+        },
+        "recovery": {
+          "type": "object"
+        },
+        "reassignment": {
+          "type": "object"
+        },
+        "guards": {
+          "type": "object"
+        }
+      }
+    },
+    "resources": {
+      "type": "object"
+    },
+    "governance": {
+      "type": "object"
+    },
+    "integrations": {
+      "type": "object"
+    },
+    "observability": {
+      "type": "object"
+    }
+  }
+}

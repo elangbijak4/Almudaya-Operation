@@ -1,0 +1,5 @@
+budget_version: '1.0'
+aggregate_limits: {wall_clock_minutes: 360, total_cost_units: 300, max_nesting_depth: 3, max_concurrent_child_operations: 2, max_child_revision_cycles: 2}
+allocations: {research_branch: 30, technical_branch: 35, integration_branch: 25, parent_coordination_and_contingency: 10}
+allocation_unit: percent_of_aggregate_cost_units
+exhaustion: {action: stop_new_work_and_escalate, child_budget_isolation: strict}

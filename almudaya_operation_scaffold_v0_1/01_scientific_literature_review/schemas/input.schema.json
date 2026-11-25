@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scientific Literature Review Operation Input",
+  "type": "object",
+  "properties": {
+    "mission_context": {
+      "type": "string",
+      "description": "Specific context for this Operation Instance."
+    },
+    "objective": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parameters": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "mission_context",
+    "objective"
+  ]
+}

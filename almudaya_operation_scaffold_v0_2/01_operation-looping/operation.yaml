@@ -1,0 +1,274 @@
+{
+  "apiVersion": "almudaya.operation/v0.2",
+  "kind": "AgenticOperation",
+  "identity": {
+    "id": "almudaya.operation.looping",
+    "name": "Iterative Software Quality Loop",
+    "version": "0.2.0",
+    "description": "Bounded multi-agent implementation-test-review-improvement cycle.",
+    "tags": [
+      "looping",
+      "iterative",
+      "software-engineering"
+    ]
+  },
+  "mission": {
+    "objective": "Deliver a software change satisfying supplied acceptance criteria.",
+    "scope": [
+      "Implement change in authorized workspace",
+      "Validate with declared tests",
+      "Review correctness, maintainability, and risk"
+    ],
+    "deliverables": [
+      "change_set",
+      "test_report",
+      "review_report",
+      "decision_record",
+      "execution_trace"
+    ],
+    "acceptance": [
+      "All mandatory criteria met",
+      "Required tests pass or exceptions approved",
+      "Reviewer approved",
+      "No unresolved critical finding"
+    ],
+    "parameters_schema": "schemas/input.schema.json"
+  },
+  "organization": {
+    "topology": "hybrid",
+    "roles": [
+      {
+        "id": "delivery_lead",
+        "responsibilities": [
+          "decompose requirement",
+          "assign work",
+          "integrate results",
+          "evaluate readiness",
+          "escalate"
+        ],
+        "skills": [
+          "requirements-analysis",
+          "task-decomposition"
+        ],
+        "reports_to": null,
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "developer",
+        "responsibilities": [
+          "inspect code",
+          "implement change",
+          "respond to feedback"
+        ],
+        "skills": [
+          "code-navigation",
+          "implementation",
+          "debugging"
+        ],
+        "reports_to": "delivery_lead",
+        "cardinality": {
+          "min": 1,
+          "max": 2
+        }
+      },
+      {
+        "id": "test_engineer",
+        "responsibilities": [
+          "derive tests",
+          "execute authorized tests",
+          "report reproducible failures"
+        ],
+        "skills": [
+          "test-design",
+          "test-execution"
+        ],
+        "reports_to": "delivery_lead",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "id": "reviewer",
+        "responsibilities": [
+          "review diff",
+          "assess acceptance",
+          "identify risks"
+        ],
+        "skills": [
+          "code-review",
+          "secure-coding-review"
+        ],
+        "reports_to": "delivery_lead",
+        "cardinality": {
+          "min": 1,
+          "max": 1
+        }
+      }
+    ]
+  },
+  "communication": {
+    "protocol": "almudaya.operation-message.v1",
+    "state_channel": "blackboard",
+    "artifact_passing": "reference",
+    "correlation_required": true,
+    "deduplication": "required_for_mutating_tasks"
+  },
+  "workflow": {
+    "stages": [
+      {
+        "id": "plan",
+        "owner": "delivery_lead",
+        "action": "Convert requirement into bounded tasks.",
+        "output": "task_plan"
+      },
+      {
+        "id": "implement",
+        "owner": "developer",
+        "depends_on": [
+          "plan"
+        ],
+        "action": "Implement change.",
+        "output": "change_set"
+      },
+      {
+        "id": "test",
+        "owner": "test_engineer",
+        "depends_on": [
+          "implement"
+        ],
+        "action": "Run tests and publish findings.",
+        "output": "test_report"
+      },
+      {
+        "id": "review",
+        "owner": "reviewer",
+        "depends_on": [
+          "implement",
+          "test"
+        ],
+        "action": "Review implementation and evidence.",
+        "output": "review_report"
+      },
+      {
+        "id": "evaluate",
+        "owner": "delivery_lead",
+        "depends_on": [
+          "test",
+          "review"
+        ],
+        "action": "Evaluate acceptance, progress, and next iteration.",
+        "output": "iteration_decision"
+      }
+    ]
+  },
+  "behavior": {
+    "execution_mode": "iterative",
+    "loops": [
+      {
+        "id": "implementation_feedback_cycle",
+        "scope": "operation",
+        "unit": [
+          "implement",
+          "test",
+          "review",
+          "evaluate"
+        ],
+        "max_iterations": 5,
+        "feedback_from": [
+          "test_engineer",
+          "reviewer"
+        ],
+        "continuation": "acceptance_not_met AND budget_remaining AND no_progress_count < 2",
+        "acceptance": "all_mandatory_acceptance_met AND tests_required_pass AND reviewer_approved",
+        "no_progress_limit": 2,
+        "on_limit": "escalate"
+      },
+      {
+        "id": "task_retry",
+        "scope": "task",
+        "unit": "failed_stage",
+        "max_iterations": 2,
+        "continuation": "retryable_error AND idempotent_or_checkpointed",
+        "on_limit": "escalate"
+      }
+    ],
+    "termination": {
+      "success": "acceptance_predicate_true",
+      "failure": "unrecoverable_error OR required_resource_unavailable",
+      "cancellation": "authorized_cancel",
+      "deadline": "mission_deadline_reached"
+    },
+    "recovery": {
+      "checkpoint_before": [
+        "implementation",
+        "integration"
+      ],
+      "restore_via": "ACMA",
+      "retry_backoff": "exponential",
+      "unrecoverable_action": "escalate_and_stop"
+    },
+    "reassignment": {
+      "enabled": true,
+      "require_capability_match": true,
+      "max_reassignments_per_role": 1
+    },
+    "guards": {
+      "max_wall_clock_minutes": 120,
+      "max_total_iterations": 5,
+      "max_concurrent_agents": 5,
+      "max_cost_units": 100,
+      "cancellation_propagation": "immediate",
+      "external_side_effects": "approval_required"
+    }
+  },
+  "resources": {
+    "manifest": "resources/resource-manifest.yaml",
+    "budget": "resources/resource-budgets.yaml",
+    "secret_policy": "reference_only"
+  },
+  "governance": {
+    "policy_ref": "policies/execution-policy.yaml",
+    "least_privilege": true,
+    "audit_required": true,
+    "human_approval": [
+      "deployment",
+      "release_publication"
+    ],
+    "prohibited": [
+      "access_unlisted_secrets",
+      "modify_production_without_approval"
+    ]
+  },
+  "integrations": {
+    "blackboard": {
+      "enabled": true,
+      "purpose": "transient_shared_state"
+    },
+    "acma": {
+      "enabled": true,
+      "purpose": "checkpoint_handoff_recovery"
+    },
+    "pku": {
+      "enabled": true,
+      "purpose": "project_context_and_approved_lessons"
+    },
+    "event_bus": {
+      "protocol": "almudaya.operation-message.v1"
+    }
+  },
+  "observability": {
+    "emit_events": [
+      "operation_started",
+      "stage_completed",
+      "feedback_received",
+      "iteration_started",
+      "guard_triggered",
+      "operation_terminated"
+    ],
+    "produce_execution_trace": true
+  }
+}

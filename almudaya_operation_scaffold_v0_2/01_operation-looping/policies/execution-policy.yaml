@@ -1,0 +1,5 @@
+policy_id: looping-operation-policy
+version: '1.0'
+permissions: {workspace_read: scoped, workspace_write: authorized_only, execute_commands: allowlist_only, network_access: deny_by_default, production_access: deny}
+approvals: {deployment: human_required, release: human_required, destructive_changes: human_required}
+loop_safety: {operation_iteration_cap: 5, task_retry_cap: 2, no_progress_cap: 2, budget_exhaustion: stop_and_escalate}
