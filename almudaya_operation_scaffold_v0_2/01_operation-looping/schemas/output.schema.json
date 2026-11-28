@@ -45,7 +45,24 @@
       "type": "integer"
     },
     "artifacts": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "change_set": {
+          "type": "string"
+        },
+        "test_report": {
+          "type": "string"
+        },
+        "review_report": {
+          "type": "string"
+        },
+        "decision_record": {
+          "type": "string"
+        },
+        "execution_trace": {
+          "type": "string"
+        }
+      }
     },
     "escalations": {
       "type": "array",

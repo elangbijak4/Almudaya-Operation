@@ -1,0 +1,111 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+\title{\textbf{From Agentic Skills to Agentic Operations:\\
+A Dynamic Swarm Manifold Abstraction for Multi-Agent Systems}}
+\author{Almudaya Research Institute\\
+\small Conceptual \& Runtime-Aligned Architecture Paper --- Version 0.4}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Agentic systems increasingly employ reusable capability packages, commonly termed \emph{Agentic Skills} (\texttt{\#Skill}), to equip individual LLM-based agents with domain instructions, procedures, scripts, and progressive-disclosure resources. While Skills excel at single-agent procedural expertise, multi-agent missions require explicit organizational specifications governing dynamic role realization, capability distribution, write fencing, inter-agent routing, budgets, bounded loops, and human approval gates. This paper introduces \emph{Agentic Operation} (\texttt{\#Operation}, AO) as a mission-oriented \textbf{Dynamic Swarm Manifold} abstraction that lifts procedural single-agent Skills into reusable, runtime-independent collective organizations. Rather than pre-allocating static agent rosters, an Operation (\texttt{almudaya.operation/v0.3}) specifies \emph{Role Archetypes} realized dynamically through a set-valued map $\mu_t : R_{\mathrm{active}}(t) \rightrightarrows B_t$ supporting just-in-time spawning, idle recycling, role coalescing, apoptosis, and formal separation of duties (\emph{anti-affinity}). We prove a continuous degenerate reduction ($L=1 \leftrightarrow L>1$) showing single-agent \texttt{\#Skill} execution as the $|B_t|=1$ boundary of an Operation, introduce a typed AST predicate language (\texttt{PredicateExpr}) for the Operational Behavior Specification (OBS), position AO against classical MAS organization models (MOISE+, OperA, JaCaMo) and modern LLM agent ecosystems (MetaGPT, AutoGen, MCP, A2A), and validate seven \texttt{v0.3} Operations—including \emph{PaperOrchestra} (\texttt{\#Operation-researchPipeline})—using an automated static semantic validator.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Agentic AI; Agent Skills; Agentic Operation; Dynamic Swarm Manifold; Multi-Agent Systems; Operational Behavior Specification; Capability Governance.
+
+\section{Introduction}
+Large language model (LLM) agents rely on modular packages known as \emph{Agentic Skills} to discover and load specialized procedural knowledge on demand \cite{anthropic2025skills}. Yet complex engineering and scientific missions spanning multiple autonomous agents expose an \emph{abstraction gap}: distributing \texttt{\#Skill} packages does not determine role isolation against confirmation bias, concurrent write fencing, dynamic worker spawning/dissolution, or bounded rollback rules.
+
+Dynamic multi-agent platforms such as \emph{Almudaya Multi-Agent} form elastic agent swarms where processes are created and destroyed on the fly without mandatory predefined pipelines. We propose \emph{Agentic Operation} (\texttt{\#Operation}, AO) to bridge procedural \texttt{\#Skill} modularity and dynamic swarm orchestration. This paper makes \textbf{six} contributions:
+\begin{description}
+  \item[C1.] It formalizes organizational lifting from \texttt{\#Skill} to \texttt{\#Operation} and proves continuous degenerate $L=1 \leftrightarrow L>1$ reduction back to single-agent Skill execution (Proposition~\ref{prop:l1}).
+  \item[C2.] It defines an orthogonal 10-tuple Operation Definition ($OD$) and dynamic Instance ($OI(t)$) supporting ephemeral Role Archetypes, role coalescing, anti-affinity, and three orchestration regimes (\texttt{emergent}, \texttt{blueprint\_seeded}, \texttt{stage\_gated}).
+  \item[C3.] It formalizes the Operational Behavior Specification (OBS) using a deterministic typed AST (\texttt{PredicateExpr}) and clean separation of \texttt{role} vs.\ \texttt{resource\_evaluator} feedback.
+  \item[C4.] It maps AO 1-to-1 onto atomic governance protocols (write-fencing tokens, dead-end routing, dynamic rules, objective gates) and sub-manifold delegation.
+  \item[C5.] It contrasts AO with MOISE+, OperA, JaCaMo, MetaGPT, AutoGen, MCP, and A2A, and supplies a static semantic validator.
+  \item[C6.] It presents synchronized declarative specifications including \emph{PaperOrchestra} (\texttt{\#Operation-researchPipeline}).
+\end{description}
+
+\section{From Agentic Skills to Dynamic Swarm Manifolds}
+\begin{definition}[Agentic Skill]
+An \emph{Agentic Skill} (\texttt{\#Skill}) is a discoverable, versioned procedural capability package encapsulating domain instructions, procedures, entry points, and optional scripts or references enabling one agent to execute a task category via progressive disclosure \cite{anthropic2025skills}.
+\end{definition}
+
+When missions require multiple agents, static workflow scripts either ossify the team topology or embed governance in imperatively coupled code. An \texttt{\#Operation} instead acts as a \textbf{Dynamic Swarm Manifold Field}: it defines the invariant rules, potential Role Archetypes, and boundaries within which a live bot population self-assembles and adapts at runtime.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Abstraction} & \textbf{Primary Concern} & \textbf{Question Addressed} \\
+\midrule
+Agent / Bot & Autonomous runtime process & Which entity executes an assigned unit of work? \\
+Skill & Procedural capability & How can an agent perform a task category? \\
+Tool / MCP & Executable interface & What external resource can an authorized role invoke? \\
+Workflow & Task dependencies & How do tasks depend on one another? \\
+Memory & Transient \& persistent state & What state is shared or retained across lifetimes? \\
+Operation & Dynamic swarm organization & How is a swarm dynamically realized and governed for a mission? \\
+\bottomrule
+\end{tabular}
+\caption{Conceptual positioning across core agentic abstractions.}
+\end{table}
+
+\section{Related Work and Positioning}
+Building on multi-agent organizational surveys \cite{horling2004survey,jennings2000agent,wooldridge2009introduction}, AO bridges three research threads:
+\begin{itemize}
+  \item \textbf{Classical Declarative MAS Organizations (MOISE+, OperA, JaCaMo):} MOISE+ \cite{hubner2007moise}, OperA \cite{dignum2004opera}, and JaCaMo \cite{boissier2013jacamo} separate structural, functional, and deontic specifications from agents. AO extends this heritage to stochastic LLM ecosystems via progressive-disclosure \texttt{\#Skill} bindings, hardware/token-bounded ephemeral bot lifecycles, and typed non-regressing refinement predicates.
+  \item \textbf{Modern LLM Multi-Agent Frameworks (MetaGPT, AutoGen):} MetaGPT \cite{hong2024metagpt} encodes SOPs into prompt pipelines and AutoGen \cite{wu2023autogen} orchestrates conversational patterns in code. AO decouples organizational specification from framework code into a validated, portable schema.
+  \item \textbf{Interoperability Protocols (MCP, A2A):} MCP \cite{anthropic2024mcp} standardizes tool/data access and A2A \cite{google2025a2a} standardizes inter-agent messaging. AO operates at the organizational layer above both, governing which roles hold which MCP grants and which policies constrain peer delegation.
+\end{itemize}
+
+\section{Formal Model of Agentic Operation v0.3}
+\subsection{Orthogonal Operation Definition and Dynamic Instance}
+An Operation Definition in \texttt{almudaya.operation/v0.3} is an orthogonal 10-tuple:
+\begin{equation}
+OD = (I, M, R, T, C, W, B, Q, G, X),
+\end{equation}
+where $I$ is versioned identity; $M$ mission objective, deliverables, criteria, and paired \texttt{input\_schema}/\texttt{output\_schema}; $R$ Role Archetypes, Skill bindings, access modes, ACG capabilities, ephemeral lifecycle rules, and anti-affinity invariants; $T$ topology shape, orchestration regime, $L=1$ continuity, crystallization policy, and sub-operations; $C$ communication protocol, Blackboard ACLs, and dead-end routing; $W$ optional seed stages and dynamic task mutation policy; $B$ OBS (\texttt{protocol\_bindings}, \texttt{loops}, typed \texttt{termination}, \texttt{recovery}); $Q$ resource contracts, write fencing, and hardware policy; $G$ dynamic rules, HITL gates, prohibited actions, and hierarchy safety; and $X$ runtime integrations and observability. At runtime $t$, an Operation Instance is $OI(t) = (OD, \Theta, E(t), \Sigma(t), K(t))$.
+
+\subsection{Dynamic Realization Map $\mu_t$ and Degenerate $L=1$ Reduction}
+Live execution maintains a set-valued dynamic realization map $\mu_t : R_{\mathrm{active}}(t) \rightrightarrows B_t$ satisfying cardinality bounds and anti-affinity invariants: \texttt{strict\_distinct\_bot} requires $\mu_t(r_i) \cap \mu_t(r_j) = \emptyset$, whereas \texttt{epoch\_reset\_required} permits shared execution across epochs $t' > t$ after context isolation and fence epoch increment.
+
+\begin{proposition}[Degenerate $L=1$ Reduction to Agentic Skill]\label{prop:l1}
+Let $OD$ enable \texttt{l1\_single\_agent\_fallback} and \texttt{allow\_role\_coalescing} without \texttt{strict\_distinct\_bot} constraints among mandatory roles. Under minimal mission complexity or hardware pressure with $|B_t| = 1$ ($B_t = \{b_0\}$), the realization map collapses to $\mu_t(r) = \{b_0\}$ for all $r \in R_{\mathrm{active}}(t)$, consolidating active \texttt{\#Skill} packages onto $b_0$ while retaining elastic expansion to $|B_{t+1}| > 1$ via just-in-time worker spawning.
+\end{proposition}
+
+\subsection{Three Orchestration Regimes and Crystallization}
+Operations support \texttt{emergent} (\texttt{seed\_stages = []}), \texttt{blueprint\_seeded}, and \texttt{stage\_gated} regimes. When \texttt{allow\_on\_the\_fly\_synthesis} and \texttt{crystallize\_on\_success} hold, ad-hoc swarm configurations that pass the final gate can be extracted and persisted as reusable versioned Operations.
+
+\section{OBS Predicates, Protocol Grounding, and Static Validation}
+OBS replaces free-text predicates with a deterministic AST (\texttt{PredicateExpr}) supporting boolean connectives (\texttt{all}, \texttt{any}, \texttt{not}) and typed comparisons (\texttt{eq}, \texttt{neq}, \texttt{gt}, \texttt{gte}, \texttt{lt}, \texttt{lte}, \texttt{in}) over namespaced state variables (\texttt{ledger.*}, \texttt{protocol.*}, \texttt{budget.*}, \texttt{gate.*}, \texttt{artifact.*}, \texttt{candidate.*}, \texttt{accepted.*}, \texttt{error.*}, \texttt{child.*}). Feedback sources separate \texttt{role} from \texttt{resource\_evaluator}. Runtime execution maps cleanly to atomic governance protocols (spawn limits, iteration handovers, dead-end mediation, monotonic token write fencing, objective gates) and passes a 9-layer static semantic validator (\texttt{tools/validate\_operations.py}).
+
+\section{Conclusion and Future Evaluation}
+Agentic Operation \texttt{v0.3} unifies declarative multi-agent governance with dynamic, ephemeral swarm formation. Planned empirical evaluation compares single-agent Skill baselines, static workflows, and Dynamic Swarm Manifold Operations across completion rate, regression rate, latency, and token cost.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\section{Declarative Conversion of PaperOrchestra}
+Synchronized with \texttt{almudaya\_operation\_v0\_3/04\_research\_pipeline/operation.yaml}, \emph{PaperOrchestra} \cite{song2026paperorchestra} is expressed as a \texttt{stage\_gated} hybrid Operation (\texttt{almudaya.operation.research-pipeline}, v0.3.0) with 8 Role Archetypes, strict anti-affinity separating \texttt{manuscript\_writer} from \texttt{citation\_verifier} and \texttt{quality\_refiner}, typed \texttt{PredicateExpr} visual/manuscript refinement loops, and 10 schema-aligned deliverables.
+
+\section{Demonstrative Swarm Manifold Operations}
+Three additional \texttt{v0.3} packages demonstrate \texttt{emergent} stigmergic bug hunting (\texttt{01\_emergent\_bug\_hunt}), \texttt{blueprint\_seeded} iterative quality loops (\texttt{02\_iterative\_quality\_loop}), and \texttt{sub\_manifold} hierarchical delegation across three concrete child Operations (\texttt{03\_multi\_hierarchy\_manifold}).
+
+\section{Repository Contract and Verification}
+Every Operation directory pairs \texttt{operation.yaml} and \texttt{Operation.md} with strict Draft 2020-12 \texttt{input.schema.json} and \texttt{output.schema.json} contracts verified automatically with zero errors.
+
+\end{document}

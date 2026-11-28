@@ -6,4 +6,5 @@ bindings:
   - {role: citation_verifier, skills: [bibliographic-verification, doi-resolution, reference-deduplication]}
   - {role: manuscript_writer, skills: [academic-writing, latex-authoring, evidence-grounded-synthesis, table-generation]}
   - {role: quality_refiner, skills: [manuscript-review, structured-critique, revision-planning, regression-checking]}
+  - {role: human_researcher, skills: []}
 resolution: {strategy: registry, version_policy: pinned_or_approved_compatible, missing_required_skill: fail_validation}

@@ -32,7 +32,8 @@
       "Reviewer approved",
       "No unresolved critical finding"
     ],
-    "parameters_schema": "schemas/input.schema.json"
+    "parameters_schema": "schemas/input.schema.json",
+    "output_schema": "schemas/output.schema.json"
   },
   "organization": {
     "topology": "hybrid",

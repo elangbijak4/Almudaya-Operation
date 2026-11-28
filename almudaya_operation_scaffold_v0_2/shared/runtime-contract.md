@@ -1,6 +1,6 @@
 # Runtime Contract
 
-Lifecycle minimum: `draft → validated → resolving → ready → running → succeeded | failed | cancelled | expired | terminated_by_guard`.
+Lifecycle minimum: `draft → validated → resolving → ready → running → paused | awaiting_approval → succeeded | failed | cancelled | expired | terminated_by_guard`.
 
 Runtime menyediakan schema/semantic validation, version-pinned dependency resolution, role/agent resolution, resource authorization, workflow scheduler, generic Loop Engine, predicate evaluator, cancellation, timeout, checkpoint/recovery, execution trace, dan audit events.
 

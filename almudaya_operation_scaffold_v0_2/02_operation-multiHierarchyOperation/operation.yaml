@@ -34,7 +34,8 @@
       "Cross-branch contradictions resolved or reported",
       "Final quality gate approved"
     ],
-    "parameters_schema": "schemas/input.schema.json"
+    "parameters_schema": "schemas/input.schema.json",
+    "output_schema": "schemas/output.schema.json"
   },
   "organization": {
     "topology": "hierarchical",
@@ -50,7 +51,8 @@
         ],
         "skills": [
           "mission-planning",
-          "operation-composition"
+          "operation-composition",
+          "decision-integration"
         ],
         "reports_to": null,
         "cardinality": {

@@ -44,16 +44,25 @@
         }
       }
     },
-    "evidence_register_ref": {
+    "evidence_register": {
       "type": "string"
     },
-    "risk_register_ref": {
+    "research_synthesis": {
       "type": "string"
     },
-    "decision_log_ref": {
+    "architecture_options": {
       "type": "string"
     },
-    "execution_trace_ref": {
+    "risk_register": {
+      "type": "string"
+    },
+    "quality_decision": {
+      "type": "string"
+    },
+    "decision_log": {
+      "type": "string"
+    },
+    "execution_trace": {
       "type": "string"
     }
   },

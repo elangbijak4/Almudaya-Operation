@@ -43,7 +43,8 @@
       "LaTeX compiles successfully",
       "Human approval is recorded before external submission"
     ],
-    "parameters_schema": "schemas/input.schema.json"
+    "parameters_schema": "schemas/input.schema.json",
+    "output_schema": "schemas/output.schema.json"
   },
   "organization": {
     "topology": "hybrid",
@@ -59,7 +60,8 @@
         ],
         "skills": [
           "mission-planning",
-          "operation-orchestration"
+          "operation-orchestration",
+          "artifact-integration"
         ],
         "reports_to": null,
         "cardinality": {
@@ -79,6 +81,7 @@
         "skills": [
           "research-framing",
           "outline-generation",
+          "visualization-planning",
           "search-strategy-design"
         ],
         "reports_to": "operation_coordinator",
@@ -98,6 +101,7 @@
         "skills": [
           "data-visualization",
           "conceptual-diagramming",
+          "figure-captioning",
           "visual-quality-control"
         ],
         "reports_to": "operation_coordinator",
@@ -117,7 +121,8 @@
         "skills": [
           "scholarly-search",
           "literature-screening",
-          "literature-synthesis"
+          "literature-synthesis",
+          "citation-management"
         ],
         "reports_to": "operation_coordinator",
         "cardinality": {
@@ -134,7 +139,8 @@
         ],
         "skills": [
           "bibliographic-verification",
-          "doi-resolution"
+          "doi-resolution",
+          "reference-deduplication"
         ],
         "reports_to": "literature_specialist",
         "cardinality": {
@@ -153,7 +159,8 @@
         "skills": [
           "academic-writing",
           "latex-authoring",
-          "evidence-grounded-synthesis"
+          "evidence-grounded-synthesis",
+          "table-generation"
         ],
         "reports_to": "operation_coordinator",
         "cardinality": {
@@ -172,6 +179,7 @@
         "skills": [
           "manuscript-review",
           "structured-critique",
+          "revision-planning",
           "regression-checking"
         ],
         "reports_to": "operation_coordinator",
@@ -277,6 +285,9 @@
         "unit": "visualization_specialist.generate_critique_revise",
         "max_iterations": 4,
         "feedback_from": [
+          "visualization_specialist"
+        ],
+        "evaluator_resources": [
           "visual_critic"
         ],
         "continuation": "visual_quality_gate_not_met AND visual_revision_budget_remaining",

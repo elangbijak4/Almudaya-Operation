@@ -42,6 +42,12 @@
             "type": "string"
           }
         },
+        "research_plan": {
+          "type": "string"
+        },
+        "citation_registry": {
+          "type": "string"
+        },
         "quality_report": {
           "type": "string"
         },
